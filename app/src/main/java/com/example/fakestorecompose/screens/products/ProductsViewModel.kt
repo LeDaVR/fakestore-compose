@@ -3,6 +3,7 @@ package com.example.fakestorecompose.screens.products
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fakestorecompose.core.models.ProductModel
+import com.example.fakestorecompose.database.ProductEntity
 import com.example.fakestorecompose.repository.ProductsRepository
 import com.example.fakestorecompose.screens.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,12 +20,83 @@ class ProductsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<UiState<ProductsUiState>>(UiState.Loading)
     val state: StateFlow<UiState<ProductsUiState>> = _uiState.asStateFlow()
 
+    private var unfilteredProducts: List<ProductEntity> = emptyList()
+
     fun fetchProducts() {
         viewModelScope.launch {
             val products = repository.getAllProducts()
+            unfilteredProducts = products
             _uiState.value = UiState.Success(
                 data = ProductsUiState(products = products)
             )
         }
+    }
+
+    fun onEvent(event: ProductEvent) {
+        when(event) {
+            is ProductEvent.ToggleSortByPrice -> toggleSortByPrice()
+            is ProductEvent.UpdateSearchQuery -> updateSearchQuery(event.query)
+            is ProductEvent.FetchProducts -> fetchProducts()
+            is ProductEvent.NavigateToDetails -> {}
+        }
+    }
+
+    private fun toggleSortByPrice() {
+        if (_uiState.value !is UiState.Success){
+            return
+        }
+
+        val uiState = (_uiState.value as UiState.Success)
+
+        _uiState.value = UiState.Success(
+            data = ProductsUiState(
+                queryString = uiState.data.queryString,
+                sortByPrice = !uiState.data.sortByPrice,
+                products = filterAndSortProducts(
+                    unfilteredProducts,
+                    uiState.data.queryString,
+                    !uiState.data.sortByPrice
+                )
+            )
+        )
+    }
+
+    private fun updateSearchQuery(query: String) {
+        if (_uiState.value !is UiState.Success){
+            return
+        }
+
+        val uiState = (_uiState.value as UiState.Success)
+
+        _uiState.value = UiState.Success(
+            data = ProductsUiState(
+                queryString = query,
+                sortByPrice = uiState.data.sortByPrice,
+                products = filterAndSortProducts(
+                    unfilteredProducts,
+                    query,
+                    uiState.data.sortByPrice
+                )
+            )
+        )
+    }
+
+    private fun filterAndSortProducts(
+        products: List<ProductEntity>,
+        queryString: String,
+        sortByPrice: Boolean,
+    ): List<ProductEntity> {
+        var result = products.toList();
+
+        if (queryString.isNotEmpty()) {
+            result = result.filter { product ->
+                product.title.lowercase().contains(queryString.lowercase())
+            }
+        }
+
+        if (sortByPrice) {
+            result = result.sortedBy { p -> p.price }
+        }
+        return result
     }
 }
