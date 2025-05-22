@@ -56,7 +56,8 @@ dependencies {
     implementation(libs.dagger.hilt.android)
     implementation(libs.hilt.navigation)
     ksp(libs.dagger.hilt.compiler)
-
+    implementation(libs.squareup.retrofit.gson)
+    implementation(libs.squareup.retrofit)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
