@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.example.fakestorecompose.navigation.AppNavigation
 import com.example.fakestorecompose.ui.theme.FakeStoreComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,28 +22,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             FakeStoreComposeTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    val navController = rememberNavController()
+                    AppNavigation(
+                        navController,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FakeStoreComposeTheme {
-        Greeting("Android")
     }
 }
