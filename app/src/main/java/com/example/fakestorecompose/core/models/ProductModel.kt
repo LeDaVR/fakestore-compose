@@ -1,5 +1,7 @@
 package com.example.fakestorecompose.core.models
 
+import com.example.fakestorecompose.database.ProductEntity
+
 data class ProductModel(
     val category: Category,
     val description: String,
@@ -15,4 +17,14 @@ data class Category(
     val image: String,
     val name: String,
     val slug: String
+)
+
+fun ProductModel.toEntity() : ProductEntity = ProductEntity(
+    id = id,
+    categoryName = category.name,
+    title = title,
+    slug = slug,
+    price = price,
+    description = description,
+    images = images,
 )

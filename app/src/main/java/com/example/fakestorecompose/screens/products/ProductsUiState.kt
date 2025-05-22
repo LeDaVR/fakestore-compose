@@ -1,7 +1,7 @@
 package com.example.fakestorecompose.screens.products
 
-import com.example.fakestorecompose.core.models.ProductModel
+import com.example.fakestorecompose.database.ProductEntity
 
 class ProductsUiState (
-    val products: List<ProductModel> = emptyList()
+    val products: List<ProductEntity> = emptyList()
 )

@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.dagger.hilt.plugin)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.room.plugin)
 }
 
 android {
@@ -40,6 +41,9 @@ android {
     buildFeatures {
         compose = true
     }
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
 
 dependencies {
@@ -58,6 +62,8 @@ dependencies {
     ksp(libs.dagger.hilt.compiler)
     implementation(libs.squareup.retrofit.gson)
     implementation(libs.squareup.retrofit)
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

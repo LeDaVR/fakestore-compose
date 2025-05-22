@@ -13,6 +13,7 @@ hiltVersion = "2.55"
 kspVersion = "2.1.20-2.0.0"
 hiltNavigationVersion = "1.2.0"
 retrofitVersion = "3.0.0"
+roomVersion = "2.7.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,6 +36,8 @@ dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler",  v
 hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationVersion" }
 squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit" , version.ref = "retrofitVersion" }
 squareup-retrofit-gson = {  group = "com.squareup.retrofit2", name = "converter-gson" , version.ref = "retrofitVersion"}
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomVersion" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -43,3 +46,4 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 dagger-hilt-plugin = { id = "com.google.dagger.hilt.android" , version.ref = "hiltVersion" }
 ksp = { id = "com.google.devtools.ksp" , version.ref = "kspVersion" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+room-plugin = { id = "androidx.room", version.ref = "roomVersion"}
