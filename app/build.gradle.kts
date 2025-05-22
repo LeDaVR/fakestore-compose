@@ -64,6 +64,9 @@ dependencies {
     implementation(libs.squareup.retrofit)
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network)
+    implementation(libs.coil.svg)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

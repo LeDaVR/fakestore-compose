@@ -1,26 +1,18 @@
 package com.example.fakestorecompose.screens.products
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,11 +20,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.fakestorecompose.navigation.Routes
 import com.example.fakestorecompose.screens.UiState
+import com.example.fakestorecompose.screens.products.components.ProductLazyColumn
+import com.example.fakestorecompose.screens.products.components.ProductSearchBar
 
 @Composable
 fun ProductScreenContent(
@@ -66,57 +61,54 @@ fun ProductScreen(
     onEvent: (ProductEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        Text("Products Screen")
-        Row(
-            modifier = modifier
-                .fillMaxWidth(),
-        ) {
-            OutlinedTextField(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                singleLine = true,
-                value = state.let { if (state is UiState.Success) state.data.queryString else ""},
-                onValueChange = { query -> onEvent(ProductEvent.UpdateSearchQuery(query)) }
-            )
-            IconButton(
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                        shape = RoundedCornerShape(12.dp)
-                    ),
-                onClick = { onEvent(ProductEvent.ToggleSortByPrice) },
+    Column(modifier = modifier
+        .padding(16.dp)
+    ) {
+        ProductSearchBar(
+            state = state,
+            onEvent = onEvent,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        when (state) {
+            is UiState.Loading -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    Icons.Default.ArrowDropDown,
-                    contentDescription = "Sort by price.",
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(96.dp)
+                        .padding(16.dp),
+                    color = MaterialTheme.colorScheme.primary,
+                    strokeWidth = 4.dp
                 )
             }
-        }
-        when (state) {
-            is UiState.Loading -> CircularProgressIndicator()
-            is UiState.Error -> Text("Something went wrong")
-            is UiState.Success -> {
-                LazyColumn {
-                    items((state as UiState.Success).data.products) { product ->
-                        Row {
-                            Text(
-                                text = product.title,
-                                modifier = Modifier.weight(1f),
-                            )
-                            Button (
-                                modifier = Modifier.weight(1f),
-                                onClick =
-                                    { onEvent(ProductEvent.NavigateToDetails(product.id)) }
-                            ) {
-                                Text(text = "Go to Details")
-                            }
-                        }
-                    }
+            is UiState.Error -> Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Oops! Something went wrong",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = { onEvent(ProductEvent.FetchProducts) },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text("Try Again")
                 }
             }
+            is UiState.Success -> ProductLazyColumn(
+                products = state.data.products,
+                onProductClicked = { id -> onEvent(ProductEvent.NavigateToDetails(id)) }
+            )
         }
     }
 }
