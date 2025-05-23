@@ -74,19 +74,6 @@ fun ProductScreen(
             modifier = Modifier.fillMaxWidth(),
         )
         when (state) {
-//            is UiState.Loading -> Box(
-//                modifier = Modifier.fillMaxSize(),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                CircularProgressIndicator(
-//                    modifier = Modifier
-//                        .size(96.dp)
-//                        .padding(16.dp),
-//                    color = MaterialTheme.colorScheme.primary,
-//                    strokeWidth = 4.dp
-//                )
-//            }
-
             is UiState.Error -> Column(
                 modifier = Modifier
                     .fillMaxSize()
