@@ -11,8 +11,10 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.fakestorecompose.R
 import com.example.fakestorecompose.database.ProductEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,7 +31,7 @@ fun ProductLazyColumn(
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                "No results found.",
+                stringResource(id = R.string.no_results),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
