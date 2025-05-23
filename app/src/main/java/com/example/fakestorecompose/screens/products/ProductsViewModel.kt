@@ -1,5 +1,6 @@
 package com.example.fakestorecompose.screens.products
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fakestorecompose.database.ProductEntity
@@ -21,7 +22,13 @@ class ProductsViewModel @Inject constructor(
 
     private var unfilteredProducts: List<ProductEntity> = emptyList()
 
-    fun fetchProducts() {
+    init {
+        Log.e("Fetch","init viewmodel" )
+        fetchProducts()
+    }
+
+    private fun fetchProducts() {
+        Log.e("Fetch","products" )
         _uiState.value = UiState.Loading
         viewModelScope.launch {
             repository.getAllProducts()

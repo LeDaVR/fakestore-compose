@@ -65,7 +65,7 @@ fun DetailsScreenContent(
         is UiState.Success -> {
             DetailsScreen(
                 product = (state as UiState.Success<DetailsUiState>).data.product,
-                onReturnClicked = { navController.navigate(Routes.Products)},
+                onReturnClicked = {  navController.popBackStack() },
                 modifier = modifier,
             )
         }
