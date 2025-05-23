@@ -1,15 +1,39 @@
 package com.example.fakestorecompose.screens.details
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil3.compose.AsyncImage
+import com.example.fakestorecompose.database.ProductEntity
 import com.example.fakestorecompose.navigation.Routes
 import com.example.fakestorecompose.screens.UiState
 
@@ -26,17 +50,118 @@ fun DetailsScreenContent(
         viewModel.fetchProduct(id)
     }
 
-    when(state) {
+    when (state) {
         is UiState.Loading -> {}
         is UiState.Error -> {}
         is UiState.Success -> {
-            Column (modifier = modifier) {
-                Text("${(state as UiState.Success).data.product.title}")
-                Button(
-                    onClick = { navController.navigate(Routes.Products) }
-                ){
-                    Text(text = "Go to Products")
+            DetailsScreen(
+                product = (state as UiState.Success<DetailsUiState>).data.product,
+                onReturnClicked = { navController.navigate(Routes.Products)},
+                modifier = modifier,
+            )
+        }
+    }
+}
+
+@Composable
+fun DetailsScreen(
+    product: ProductEntity,
+    onReturnClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        modifier = modifier
+            .fillMaxSize(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            val pagerState = rememberPagerState(pageCount = { product.images.size })
+            HorizontalPager(
+                beyondViewportPageCount = product.images.size,
+                state = pagerState,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .clip(RoundedCornerShape(12.dp))
+            ) { page ->
+                AsyncImage(
+                    model = product.images[page],
+                    contentDescription = "${product.title} image ${page + 1}",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
+            // Indicadores del carrusel
+            if (product.images.size > 1) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    repeat(product.images.size) { index ->
+                        Box(
+                            modifier = Modifier
+                                .size(8.dp)
+                                .padding(2.dp)
+                                .clip(RoundedCornerShape(50))
+                                .background(
+                                    if (pagerState.currentPage == index)
+                                        MaterialTheme.colorScheme.primary
+                                    else
+                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                                )
+                        )
+                    }
                 }
+            }
+
+            Text(
+                text = product.title,
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+
+            Text(
+                text = "$${product.price}",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
+            Text(
+                text = "Category: ${product.categoryName}",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
+            Text(
+                text = product.description,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(top = 12.dp)
+            )
+
+            IconButton(
+                onClick = onReturnClicked,
+            ) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back to Store"
+                )
             }
         }
     }
