@@ -16,6 +16,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
@@ -39,10 +41,10 @@ fun ProductCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(12.dp)
             .clickable { onCardClicked(product.id) },
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(4.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         )
@@ -100,6 +102,12 @@ fun ProductCard(
                 }
             }
 
+            HorizontalDivider(
+                modifier = Modifier.padding(top = 16.dp),
+                thickness = 2.dp,
+                color = MaterialTheme.colorScheme.surfaceVariant
+            )
+
             Text(
                 text = product.title,
                 style = MaterialTheme.typography.headlineSmall,
@@ -117,4 +125,23 @@ fun ProductCard(
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun ProductCardPreview() {
+    val productEntity = ProductEntity(
+        id = 1,
+        categoryName = "Electronics",
+        description = "A high-quality smartphone with advanced features",
+        images = listOf("https://fakestoreapi.com/img/phone.jpg"),
+        price = 59999L,
+        slug = "smartphone-xyz",
+        title = "Smartphone XYZ"
+    )
+
+    ProductCard(
+        product = productEntity,
+        onCardClicked = {}
+    )
 }
