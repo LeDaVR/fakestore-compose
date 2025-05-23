@@ -25,10 +25,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -82,12 +84,37 @@ fun DetailsScreen(
                 .padding(16.dp)
         ) {
             val pagerState = rememberPagerState(pageCount = { product.images.size })
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
+            ) {
+
+                IconButton(
+                    onClick = onReturnClicked,
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back to Store"
+                    )
+                }
+
+                Text(
+                    text = "Product Details",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+            }
+
             HorizontalPager(
                 beyondViewportPageCount = product.images.size,
                 state = pagerState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
+                    .padding(top = 12.dp)
                     .clip(RoundedCornerShape(12.dp))
             ) { page ->
                 AsyncImage(
@@ -138,7 +165,7 @@ fun DetailsScreen(
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = 16.dp)
             )
 
             Text(
@@ -154,15 +181,25 @@ fun DetailsScreen(
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(top = 12.dp)
             )
-
-            IconButton(
-                onClick = onReturnClicked,
-            ) {
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back to Store"
-                )
-            }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsPreview() {
+    val productEntity = ProductEntity(
+        id = 1,
+        categoryName = "Electronics",
+        description = "A high-quality smartphone with advanced features",
+        images = listOf("https://fakestoreapi.com/img/phone.jpg"),
+        price = 59999L,
+        slug = "smartphone-xyz",
+        title = "Smartphone XYZ"
+    )
+
+    DetailsScreen(
+        product = productEntity,
+        onReturnClicked = {}
+    )
 }
