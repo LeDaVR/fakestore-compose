@@ -2,7 +2,6 @@ package com.example.fakestorecompose.screens.products
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fakestorecompose.core.models.ProductModel
 import com.example.fakestorecompose.database.ProductEntity
 import com.example.fakestorecompose.repository.ProductsRepository
 import com.example.fakestorecompose.screens.UiState
@@ -23,12 +22,23 @@ class ProductsViewModel @Inject constructor(
     private var unfilteredProducts: List<ProductEntity> = emptyList()
 
     fun fetchProducts() {
+        _uiState.value = UiState.Loading
         viewModelScope.launch {
-            val products = repository.getAllProducts()
-            unfilteredProducts = products
-            _uiState.value = UiState.Success(
-                data = ProductsUiState(products = products)
-            )
+            repository.getAllProducts()
+                .onSuccess { productsResponse: ProductsResponse ->
+                    unfilteredProducts = productsResponse.products
+                    _uiState.value = UiState.Success(
+                        data = ProductsUiState (
+                            products = productsResponse.products,
+                            isLocal = productsResponse.isLocal,
+                        )
+                    )
+                }
+                .onFailure {
+                    _uiState.value = UiState.Error(
+                        message = "Network Error."
+                    )
+                }
         }
     }
 

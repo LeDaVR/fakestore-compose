@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,12 +15,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.fakestorecompose.database.ProductEntity
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductLazyColumn(
     products: List<ProductEntity>,
     onProductClicked: (Int) -> Unit,
+    onRefresh: () -> Unit,
+    isRefreshing: Boolean,
 ) {
-    if (products.isEmpty()) {
+    if (products.isEmpty() && !isRefreshing) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center,
@@ -31,12 +36,21 @@ fun ProductLazyColumn(
             )
         }
     }
-    LazyColumn {
-        items(products) { product ->
-            ProductCard(
-                product = product,
-                onCardClicked = onProductClicked,
-            )
+
+    PullToRefreshBox(
+        modifier = Modifier.fillMaxSize(),
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
+    ) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            items(products) { product ->
+                ProductCard(
+                    product = product,
+                    onCardClicked = onProductClicked,
+                )
+            }
         }
     }
 }
@@ -62,7 +76,9 @@ fun ProductLazyColumnPreview() {
 
     ProductLazyColumn(
         products = testProducts,
-        onProductClicked = {}
+        onProductClicked = {},
+        onRefresh = {},
+        isRefreshing = false,
     )
 }
 
@@ -71,6 +87,8 @@ fun ProductLazyColumnPreview() {
 fun ProductLazyColumnEmptyPreview() {
     ProductLazyColumn(
         products = emptyList(),
-        onProductClicked = {}
+        onProductClicked = {},
+        onRefresh = {},
+        isRefreshing = false,
     )
 }
