@@ -29,12 +29,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
+import com.example.fakestorecompose.R
 import com.example.fakestorecompose.database.ProductEntity
 import com.example.fakestorecompose.navigation.Routes
 import com.example.fakestorecompose.screens.UiState
@@ -117,9 +120,21 @@ fun DetailsScreen(
                     .padding(top = 12.dp)
                     .clip(RoundedCornerShape(12.dp))
             ) { page ->
-                AsyncImage(
+                SubcomposeAsyncImage(
                     model = product.images[page],
                     contentDescription = "${product.title} image ${page + 1}",
+                    error = {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.no_image),
+                                contentDescription = "Unable to load Image.",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(64.dp)
+                            )
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.surfaceVariant),
