@@ -26,6 +26,6 @@ This app leverages modern Android development best practices and the following k
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/LeDaVR/fakestore-compose.git](https://github.com/LeDaVR/fakestore-compose.git)
+    git clone https://github.com/LeDaVR/fakestore-compose.git
     ```
 2.  **Open in Android Studio:** Open the cloned project in Android Studio (latest stable version recommended).
