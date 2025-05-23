@@ -31,7 +31,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,6 +44,7 @@ import com.example.fakestorecompose.R
 import com.example.fakestorecompose.database.ProductEntity
 import com.example.fakestorecompose.navigation.Routes
 import com.example.fakestorecompose.screens.UiState
+import com.example.fakestorecompose.ui.theme.FakeStoreComposeTheme
 
 @Composable
 fun DetailsScreenContent(
@@ -193,7 +196,10 @@ fun DetailsScreen(
 
             Text(
                 text = product.description,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyLarge
+                    .copy(
+                        lineBreak = LineBreak.Paragraph.copy(strategy = LineBreak.Strategy.Balanced)
+                    ),
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(top = 12.dp)
             )
@@ -214,8 +220,10 @@ fun DetailsPreview() {
         title = "Smartphone XYZ"
     )
 
-    DetailsScreen(
-        product = productEntity,
-        onReturnClicked = {}
-    )
+    FakeStoreComposeTheme {
+        DetailsScreen(
+            product = productEntity,
+            onReturnClicked = {}
+        )
+    }
 }

@@ -36,7 +36,7 @@ fun ProductSearchBar(
     modifier: Modifier,
 ) {
     Row(
-        modifier = modifier.padding(PaddingValues(0.dp, 0.dp, 0.dp, 16.dp)),
+        modifier = modifier.padding(bottom =  16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         OutlinedTextField(
@@ -67,7 +67,7 @@ fun ProductSearchBar(
                 .size(48.dp)
                 .background(
                     color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(8.dp)
                 ),
             onClick = { onEvent(ProductEvent.ToggleSortByPrice) },
         ) {

@@ -45,7 +45,7 @@ fun ProductCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(12.dp)
+            .padding(top = 12.dp, bottom = 12.dp)
             .clickable { onCardClicked(product.id) },
         shape = RoundedCornerShape(4.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),

@@ -1,5 +1,6 @@
 package com.example.fakestorecompose.screens.products.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -45,7 +46,7 @@ fun ProductLazyColumn(
         onRefresh = onRefresh,
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize()
         ) {
             items(products) { product ->
                 ProductCard(
