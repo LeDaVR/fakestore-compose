@@ -1,8 +1,15 @@
 package com.example.fakestorecompose.screens.products.components
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.fakestorecompose.database.ProductEntity
 
@@ -11,6 +18,19 @@ fun ProductLazyColumn(
     products: List<ProductEntity>,
     onProductClicked: (Int) -> Unit,
 ) {
+    if (products.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                "No results found.",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
     LazyColumn {
         items(products) { product ->
             ProductCard(
@@ -42,6 +62,15 @@ fun ProductLazyColumnPreview() {
 
     ProductLazyColumn(
         products = testProducts,
+        onProductClicked = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProductLazyColumnEmptyPreview() {
+    ProductLazyColumn(
+        products = emptyList(),
         onProductClicked = {}
     )
 }
